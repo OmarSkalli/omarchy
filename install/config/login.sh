@@ -1,8 +1,19 @@
 #!/bin/bash
 
 # Hyprland launched via UWSM and login directly as user, rely on disk encryption + hyprlock for security
-if ! command -v uwsm &>/dev/null || ! command -v plymouth &>/dev/null; then
-  yay -S --noconfirm --needed uwsm=0.23.0 plymouth
+
+if ! command -v uwsm &>/dev/null; then
+  echo "Installing uwsm version 0.23.0 from archive..."
+  sudo pacman -U --noconfirm https://archive.archlinux.org/packages/u/uwsm/uwsm-0.23.0-1-any.pkg.tar.zst
+elif ! pacman -Q uwsm | grep -q "0.23.0"; then
+  echo "Current uwsm version: $(pacman -Q uwsm)"
+  echo "Installing specific uwsm version 0.23.0 from archive..."
+  sudo pacman -U --noconfirm https://archive.archlinux.org/packages/u/uwsm/uwsm-0.23.0-1-any.pkg.tar.zst
+  echo "Installed uwsm version: $(pacman -Q uwsm)"
+fi
+
+if ! command -v plymouth &>/dev/null; then
+  yay -S --noconfirm --needed plymouth
 fi
 
 # ==============================================================================

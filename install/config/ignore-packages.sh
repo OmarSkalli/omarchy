@@ -12,10 +12,10 @@ if [ ${#IGNORE_PACKAGES[@]} -gt 0 ]; then
   # Build the IgnorePkg line
   IGNORE_LINE="IgnorePkg = ${IGNORE_PACKAGES[*]}"
   
-  # Check if IgnorePkg already exists in pacman.conf
-  if grep -q "^IgnorePkg" /etc/pacman.conf; then
-    # Update existing IgnorePkg line
-    sudo sed -i "s/^IgnorePkg.*/$IGNORE_LINE/" /etc/pacman.conf
+  # Check if IgnorePkg already exists (commented or uncommented) in pacman.conf
+  if grep -q "^#\?IgnorePkg" /etc/pacman.conf; then
+    # Update existing IgnorePkg line (remove comment if present)
+    sudo sed -i "s/^#\?IgnorePkg.*/$IGNORE_LINE/" /etc/pacman.conf
   else
     # Add IgnorePkg after [options] section
     sudo sed -i "/^\[options\]/a $IGNORE_LINE" /etc/pacman.conf
